@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nova Search</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1 class="logo">Nova<span>Search</span></h1>
+      <form id="search-form" class="search-form">
+        <label for="query" class="sr-only">Search the web</label>
+        <input
+          id="query"
+          name="query"
+          type="text"
+          autocomplete="off"
+          placeholder="Search the web"
+          required
+        />
+        <div class="actions">
+          <button type="submit" id="search-btn">Nova Search</button>
+          <button type="button" id="lucky-btn">I'm Feeling Lucky</button>
+        </div>
+      </form>
+
+      <section id="results" class="results" aria-live="polite"></section>
+    </main>
+
+    <template id="result-template">
+      <article class="result-item">
+        <a class="result-url" target="_blank" rel="noopener noreferrer"></a>
+        <a class="result-title" target="_blank" rel="noopener noreferrer"></a>
+        <p class="result-snippet"></p>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
