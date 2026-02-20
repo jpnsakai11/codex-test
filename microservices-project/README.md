@@ -90,6 +90,13 @@ curl -i http://localhost:8080/readyz
 curl -i http://localhost:8080/metrics
 ```
 
+Swagger docs:
+
+```bash
+open http://localhost:8080/swagger
+curl -i http://localhost:8080/swagger/openapi.yaml
+```
+
 ### 2) order-service
 
 ```bash
@@ -116,6 +123,13 @@ Health and metrics:
 curl -i http://localhost:8081/healthz
 curl -i http://localhost:8081/readyz
 curl -i http://localhost:8081/metrics
+```
+
+Swagger docs:
+
+```bash
+open http://localhost:8081/swagger
+curl -i http://localhost:8081/swagger/openapi.yaml
 ```
 
 ## Notes

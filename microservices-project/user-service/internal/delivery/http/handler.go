@@ -1,6 +1,7 @@
 package http
 
 import (
+	"embed"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -14,6 +15,23 @@ import (
 	"github.com/example/microservices-project/user-service/internal/domain"
 	"github.com/example/microservices-project/user-service/internal/usecase"
 )
+
+//go:embed docs/openapi.yaml
+var openAPISpec []byte
+
+const swaggerUI = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>User Service API Docs</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"/>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script>window.ui = SwaggerUIBundle({url: '/swagger/openapi.yaml', dom_id: '#swagger-ui'});</script>
+</body>
+</html>`
 
 type Handler struct {
 	uc          *usecase.UserUsecase
@@ -45,6 +63,8 @@ func (h *Handler) Router() http.Handler {
 	r.Get("/healthz", func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusOK) })
 	r.Get("/readyz", func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusOK) })
 	r.Handle("/metrics", promhttp.Handler())
+	r.Get("/swagger", h.swaggerUI)
+	r.Get("/swagger/openapi.yaml", h.openapiSpec)
 	r.Post("/users", h.createUser)
 	r.Get("/users/{id}", h.getUser)
 
@@ -119,4 +139,16 @@ func (h *Handler) respondJSON(w http.ResponseWriter, code int, v any) {
 
 func (h *Handler) respondErr(w http.ResponseWriter, code int, err error) {
 	h.respondJSON(w, code, map[string]string{"error": err.Error()})
+}
+
+func (h *Handler) swaggerUI(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(swaggerUI))
+}
+
+func (h *Handler) openapiSpec(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/yaml")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(openAPISpec)
 }
